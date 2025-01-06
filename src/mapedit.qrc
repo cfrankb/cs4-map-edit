@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>data/tiles.obl</file>
         <file>data/icons/CS3MapEdit-icon.png</file>
         <file>data/icons/colorpicker.png</file>
         <file>data/icons/current.gif</file>
@@ -16,14 +15,12 @@
         <file>data/icons/save.gif</file>
         <file>data/icons/minus.png</file>
         <file>data/icons/plus.png</file>
-        <file>data/animz.obl</file>
         <file>data/annie.obl</file>
         <file>data/bitfont.bin</file>
         <file>data/icons/go-first.png</file>
         <file>data/icons/go-last.png</file>
         <file>data/cs4animz.obl</file>
         <file>data/cs4edit.obl</file>
-        <file>data/cs4num.obl</file>
         <file>data/cs4tiles.obl</file>
     </qresource>
 </RCC>

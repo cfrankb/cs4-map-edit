@@ -45,7 +45,7 @@ SOURCES += \
 HEADERS += \
     actor.h \
     anniedata.h \
-    animzdata.h \
+    #animzdata.h \
     animator.h \
     app_version.h \
     dlgattr.h \
@@ -56,7 +56,7 @@ HEADERS += \
     dlgtest.h \
     game.h \
     gamemixin.h \
-    level.h \
+   # level.h \
     mainwindow.h \
     maparch.h \
     mapfile.h \
@@ -72,7 +72,7 @@ HEADERS += \
     shared/qtgui/cheat.h \
     shared/qtgui/qfilewrap.h \
     shared/qtgui/qthelper.h \
-    sprtypes.h \
+    #sprtypes.h \
     tilebox.h \
     tilesdata.h \
     sounds.h

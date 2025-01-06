@@ -6,6 +6,7 @@
 #include "map.h"
 #include "mapscroll.h"
 #include "animator.h"
+#include "tilesdata.h"
 #include <QScrollBar>
 
 CMapWidget::CMapWidget(QWidget *parent)
@@ -47,7 +48,7 @@ void CMapWidget::preloadAssets()
     } asset_t;
 
     asset_t assets[] = {
-        {":/data/cs4tiles.obl", &m_tiles},
+        {":/data/cs4edit.obl", &m_tiles},
         {":/data/cs4animz.obl", &m_animz},
     };
 
@@ -122,7 +123,7 @@ void CMapWidget::drawScreen(CFrame &bitmap)
 
     CFrameSet & tiles = *m_tiles;
     CFrameSet & animz = *m_animz;
-    bitmap.fill(WHITE);
+    bitmap.fill(BLACK);
     for (int y=0; y < rows; ++y) {
         if (y + my >= map->hei())
         {
@@ -133,22 +134,57 @@ void CMapWidget::drawScreen(CFrame &bitmap)
             {
                 break;
             }
-            uint8_t tileID = map->at(x + mx, y + my);
-            CFrame *tile;
-            int j = m_animate ? m_animator->at(tileID) : static_cast<uint8_t>(NO_ANIMZ);
-            if (j == NO_ANIMZ) {
-                tile = tiles[tileID];
-            } else {
-                tile = animz[j];
+
+            int offset =0;
+            uint8_t tileID = map->at(x + mx, y + my) & TILE_FILTER;
+            const uint8_t attr = map->getAttr(mx+x, my+y);
+
+            if (attr & FILTER_HAZARD)
+            {
+                // draw background
+                auto tileID = ENV_FRAMES * ((attr & FILTER_HAZARD) - 1) +
+                              ((attr & FLAG_UP_DOWN) ? DOWN_OFFSET : UP_OFFSET + offset);
+                bitmap.drawAt(*(animz[tileID]), x * TILE_SIZE, y * TILE_SIZE, false);
             }
-            drawTile(bitmap, x * TILE_SIZE, y * TILE_SIZE, *tile, false);
-            uint8_t a = map->getAttr(mx+x, my+y);
-            if (a) {
-                char s[3];
-                s[0] = hexchar[a >> 4];
-                s[1] = hexchar[a & 0xf];
-                s[2] = 0;
-                drawFont(bitmap, x*TILE_SIZE, y*TILE_SIZE + 4, s, YELLOW, true);
+            if (tileID == TILES_STOP || tileID == TILES_BLANK || (attr & FLAG_HIDDEN))
+            {
+                // skip blank tiles and hidden tiles
+                continue;
+            }
+            // draw tile
+            CFrame *tile = nullptr;
+            if (tileID == TILES_DIAMOND ||
+                tileID == TILES_FORCE_FIELD ||
+                tileID == TILES_TRIFORCE ||
+                tileID == TILES_ORB)
+            {
+                tile = animz[m_animator->at(tileID)];
+            }
+            else
+            {
+                tile = tiles[tileID];
+            }
+
+            const int mode = map->at(x + mx, y + my) & FLAG_HIDDEN ? MODE_TRANS : MODE_COPY;
+            if (mode) {
+                drawTile(bitmap,x * TILE_SIZE, y * TILE_SIZE, *tile, mode );
+            } else {
+                bitmap.drawAt(*tile, x * TILE_SIZE, y * TILE_SIZE, attr & FILTER_ENV);
+            }
+
+            if (attr & FILTER_ATTR) {
+                uint8_t a = (attr & FILTER_ATTR) >> 3;
+                if (a ==1) {
+                    bitmap.drawAt(*tiles[TILES_STOP], x * TILE_SIZE, y * TILE_SIZE, true);
+                }
+                else if (a > 1) {
+                    --a;
+                    char s[3];
+                    s[0] = hexchar[a >> 4];
+                    s[1] = hexchar[a & 0xf];
+                    s[2] = 0;
+                    drawFont(bitmap, x*TILE_SIZE, y*TILE_SIZE + 4, s, YELLOW, true);
+                }
             }
         }
     }
@@ -227,12 +263,12 @@ void CMapWidget::drawFont(CFrame & frame, int x, int y, const char *text, const 
     }
 }
 
-void CMapWidget::drawTile(CFrame & bitmap, const int x, const int y, CFrame & tile, const bool alpha)
+void CMapWidget::drawTile(CFrame & bitmap, const int x, const int y, CFrame & tile, const int mode)
 {
     const int WIDTH = bitmap.len();
     const uint32_t *tileData = tile.getRGB();
     uint32_t *dest = bitmap.getRGB() + x + y * WIDTH;
-    if (alpha) {
+    if (mode == MODE_ALPHA) {
         for (int row=0; row < tile.hei(); ++row) {
             for (int col=0; col < tile.len(); ++col) {
                 const uint32_t & rgba = tileData[col];
@@ -243,7 +279,7 @@ void CMapWidget::drawTile(CFrame & bitmap, const int x, const int y, CFrame & ti
             dest += WIDTH;
             tileData += tile.len();
         }
-    } else {
+    } else if (mode == MODE_COPY) {
         for (int row=0; row < tile.hei(); ++row) {
             int i = 0;
             dest[i++] = *(tileData++);
@@ -266,6 +302,18 @@ void CMapWidget::drawTile(CFrame & bitmap, const int x, const int y, CFrame & ti
             dest[i++] = *(tileData++);
             dest[i++] = *(tileData++);
             dest += WIDTH;
+        }
+    } else  if (mode == MODE_TRANS) {
+        for (int row=0; row < tile.hei(); ++row) {
+            for (int col=0; col < tile.len(); ++col) {
+                const int tr = ((col / 2) & 1) ^ (row & 1);
+                const uint32_t & rgba = tileData[col];
+                if ((rgba & ALPHA) && !tr) {
+                    dest[col] = rgba;
+                }
+            }
+            dest += WIDTH;
+            tileData += tile.len();
         }
     }
 }

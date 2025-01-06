@@ -9,7 +9,7 @@
 #include "shared/FrameSet.h"
 #include "shared/Frame.h"
 #include "tilesdata.h"
-#include "sprtypes.h"
+//#include "sprtypes.h"
 
 CTileBox::CTileBox(QWidget *parent) :
     QToolBox(parent)
@@ -30,7 +30,7 @@ void CTileBox::setupToolbox(){
     setMaximumSize(QSize(MAX_WIDTH,MAX_HEIGHT));
 
     QFileWrap file;
-    if (file.open(":/data/cs4tiles.obl", "rb")) {
+    if (file.open(":/data/cs4edit.obl", "rb")) {
         qDebug("reading tiles");
         CFrameSet fs;
         if (fs.extract(file)) {

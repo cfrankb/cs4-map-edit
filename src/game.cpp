@@ -41,8 +41,8 @@ namespace Jump
     struct jumpSeq_t
     {
         const uint8_t seq[JUMP_SEQ_MAX];
-        const uint8_t count;
         const uint8_t aim;
+        const uint8_t count;
         template <typename... T>
         jumpSeq_t(const uint8_t _aim, T... _list) : seq{_list...}, aim{_aim}, count{sizeof...(T)}
         {
@@ -473,7 +473,7 @@ void CGame::breakBridge()
         return;
     }
     const tiledef_t &def = getTileDef(tileID);
-    if (!def.type == TYPE_BRIDGE || tileID != TILES_BRIDGE_0)
+    if (def.type != TYPE_BRIDGE || tileID != TILES_BRIDGE_0)
     {
         return;
     }
@@ -542,7 +542,7 @@ bool CGame::manageJump(const uint8_t *joyState)
             else
             {
                 const uint8_t aims[] = {Jump::Up, Jump::Left, Jump::Right};
-                for (int i = 0; i < sizeof(aims); ++i)
+                for (size_t i = 0; i < sizeof(aims); ++i)
                 {
                     const int aim = aims[i];
                     if (joyState[aim])

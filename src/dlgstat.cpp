@@ -1,7 +1,7 @@
 #include "dlgstat.h"
 #include "ui_dlgstat.h"
 #include "tilesdata.h"
-#include "sprtypes.h"
+//#include "sprtypes.h"
 #include <qlistwidget.h>
 #include <qstringlist.h>
 
