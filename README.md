@@ -2,11 +2,11 @@
 
 ## Map Editor for CS4
 
-![alt text](images/Screenshot_2023-12-20_04-26-38.png)
+![alt text](images/Screenshot_2025-01-07_05-37-12.png)
 
 ### Preview map in the editor.
 
-![alt text](images/Screenshot_2023-12-20_04-29-08.png)
+![alt text](images/Screenshot_2025-01-07_05-31-36.png)
 
 ### Runtimes available
 
