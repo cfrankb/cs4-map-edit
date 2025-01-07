@@ -37,6 +37,7 @@ public:
     explicit CGameMixin();
     virtual ~CGameMixin();
     void init(const std::string &maparch, const int index);
+    void init(CMapArch* maparch, const int index);
     inline bool within(int val, int min, int max);
     void enableHiScore();
 

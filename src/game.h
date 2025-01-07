@@ -55,6 +55,7 @@ public:
     int bulbs();
     int playerSpeed();
     bool setMapArch(const std::string &maparch);
+    void setMapArch(CMapArch *maparch);
     bool isPlayerDead();
     bool isGameOver();
     void killPlayer();
@@ -153,6 +154,7 @@ private:
     CMap m_map;
     jump_t m_jump;
     uint8_t m_keys[MAX_KEYS];
-    IndexVector m_mapIndex;
-    std::string m_mapArch;
+    IndexVector m_mapIndex; // mapIndex for disk based file
+    std::string m_mapArch; // name of file to read level from
+    CMapArch *m_mapArchLocal=nullptr; // local copy of maparch
 };

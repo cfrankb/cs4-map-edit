@@ -21,9 +21,29 @@ CDlgStat::CDlgStat(int tileID, QWidget *parent)
         tr("TYPE_MONSTER"),
         tr("TYPE_DRONE"),
         tr("TYPE_VAMPLANT"),
-        tr("TYPE_DIAMOND")
+        tr("TYPE_DIAMOND"),
+
+        tr("TYPE_LADDER"),//                      0x0c
+        tr("TYPE_PLATFORM"),//                    0x0d
+        tr("TYPE_SPECIAL"),//                     0x0e
+        tr("TYPE_SWITCH"),//                      0x0f
+        tr("TYPE_TRANS_SOURCE"), //               0x10
+        tr("TYPE_TRANS_DEST"),//                  0x11
+        tr("TYPE_TRAP"),//                        0x12
+        tr("TYPE_BRIDGE"),//                      0x13
+        tr("TYPE_ROOT"),//                        0x14
+        tr("TYPE_PULLEY"),//                      0x15
+        tr("TYPE_AUTO_ROPE"),//                   0x16
+        tr("TYPE_SOCKET"),//                      0x17
     };
+
+    constexpr const size_t typeCount = sizeof(types)/ sizeof(types[0]);
     ui->setupUi(this);
+
+    if (tileID >= TILES_MAX) {
+        ui->sName->setText(tr("Invalid TileID"));
+        return;
+    }
 
     const tiledef_t & def = getTileDef(tileID);
     ui->sName->setText(def.basename);
@@ -98,7 +118,7 @@ CDlgStat::CDlgStat(int tileID, QWidget *parent)
         w->addItem(tr("Speed %1").arg(s));
     }
 
-    ui->label->setText(types[def.type]);
+    ui->label->setText(def.type < typeCount ? types[def.type] : "Unknown Type");
 }
 
 CDlgStat::~CDlgStat()

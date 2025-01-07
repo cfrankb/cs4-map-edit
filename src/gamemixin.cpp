@@ -637,9 +637,25 @@ void CGameMixin::init(const std::string &maparch, const int index)
         return;
     }
     m_game->setLevel(index);
-    // sanityTest();
+    sanityTest();
     m_countdown = INTRO_DELAY;
     m_game->loadLevel(false);
+}
+
+void CGameMixin::init(CMapArch* maparch, const int index)
+{
+    if (!m_assetPreloaded)
+    {
+        preloadAssets();
+        m_assetPreloaded = true;
+    }
+
+    m_game->setMapArch(maparch);
+    m_game->setLevel(index);
+    sanityTest();
+    m_countdown = INTRO_DELAY;
+    m_game->loadLevel(false);
+
 }
 
 void CGameMixin::changeZoom()
@@ -704,7 +720,7 @@ void CGameMixin::drawScores(CFrame &bitmap)
     drawFont(bitmap, x, y * FONT_SIZE, t, WHITE);
     y += 2;
 
-    for (int i = 0; i < MAX_SCORES; ++i)
+    for (uint i = 0; i < MAX_SCORES; ++i)
     {
         uint32_t color = i & INTERLINES ? CYAN : BLUE;
         if (m_recordScore && m_scoreRank == i)

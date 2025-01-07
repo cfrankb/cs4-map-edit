@@ -15,6 +15,7 @@ public:
     explicit CMapWidget(QWidget *parent = nullptr);
     virtual ~CMapWidget();
     void setMap(CMap *pMap);
+    inline void drawScreen(CFrame &bitmap);
 
 signals:
 
@@ -53,7 +54,7 @@ protected:
         ENV_LAVA = 2,                          // lava
         ENV_SLIME = 3,                         // slime
         ENV_BOTTOM = 4,                        // bit on=botton, off=top (water, lava, slime)
-        ENV_FRAMES = 3,                         // frames per env element
+        ENV_FRAMES = 3,                        // frames per env element
         ATTR_STOP = 0x08,                      // stop monsters
         MODE_COPY  = 0,
         MODE_ALPHA = 1,
@@ -62,7 +63,6 @@ protected:
     };
 
     void preloadAssets();
-    inline void drawScreen(CFrame &bitmap);
     inline void drawFont(CFrame & frame, int x, int y, const char *text, const uint32_t color, const bool alpha);
     inline void drawTile(CFrame & bitmap, const int x, const int y, CFrame & tile, const int mode);
     inline void drawGrid(CFrame & bitmap);

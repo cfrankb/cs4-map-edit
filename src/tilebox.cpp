@@ -40,15 +40,21 @@ void CTileBox::setupToolbox(){
 
         const QString labels[] = {
             tr("Background"), tr("Essentials"), tr("Walls"),
-            tr("Pickup"), tr("Monsters"), tr("Keys && doors")
+            tr("Pickup"), tr("Monsters"), tr("Keys && doors"),
+            tr("Mechanic")
         };
         uint8_t icons[] = {
             TILES_NEW_PLANT, TILES_PLAYER, TILES_BRICK,
-            TILES_CHEST, TILES_OCTOPUS, TILES_HEARTDOOR
+            TILES_CHEST, TILES_OCTOPUS, TILES_HEARTDOOR,
+            TILES_SWITCH_UP
         };
 
         const int tabCount = sizeof(icons);
+        const int labelCount = sizeof(labels) /  sizeof(labels[0]);
         QWidget *w[tabCount];
+        if (tabCount != labelCount) {
+            qWarning("Mismatch count between icons and labels.");
+        }
 
         for (uint8_t i=0; i < tabCount; ++i) {
             //qDebug("creating tab %u", i);
@@ -121,7 +127,8 @@ int CTileBox::getTabId(int typeId)
         TAB_WALLS,
         TAB_PICKUP,
         TAB_MONSTERS,
-        TAB_LOCKS
+        TAB_LOCKS,
+        TAB_MECHANIC
     };
 
     int j = TAB_BACKGROUND;
@@ -149,6 +156,15 @@ int CTileBox::getTabId(int typeId)
         break;
     case TYPE_WALLS:
         j = TAB_WALLS;
+        break;
+    case TYPE_LADDER:
+    case TYPE_PLATFORM:
+    case TYPE_SWITCH:
+    case TYPE_PULLEY:
+    case TYPE_TRANS_DEST:
+    case TYPE_TRANS_SOURCE:
+    case TYPE_SOCKET:
+        j = TAB_MECHANIC;
     };
     return j;
 }

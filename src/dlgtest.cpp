@@ -9,7 +9,6 @@
 #include "tilesdata.h"
 #include "Frame.h"
 #include "FrameSet.h"
-#include "anniedata.h"
 #include "shared/qtgui/qfilewrap.h"
 
 CDlgTest::CDlgTest(QWidget *parent) :
@@ -30,8 +29,9 @@ CDlgTest::~CDlgTest()
 
 void CDlgTest::init(CMapFile *mapfile)
 {
+    m_maparch= mapfile;
     setZoom(true);
-   // CGameMixin::init(mapfile, mapfile->currentIndex());
+    CGameMixin::init(mapfile, mapfile->currentIndex());
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(mainLoop()));
 }
 
@@ -53,20 +53,28 @@ void CDlgTest::changeZoom()
 
 void CDlgTest::sanityTest()
 {
-    CMap *map = m_maparch->at(m_game->level());
+    const auto level = m_game->level();
+    qDebug("starting sanity test for level: %d", level);
+    CMap *map = m_maparch->at(level);
+    qDebug("map is null? %d", map == nullptr);
     const Pos pos = map->findFirst(TILES_PLAYER);
     QStringList listIssues;
     if ((pos.x == CMap::NOT_FOUND ) && (pos.y == CMap::NOT_FOUND )) {
         listIssues.push_back(tr("No player on map"));
+    } else {
+        qDebug("player found");
     }
     if (map->count(TILES_DIAMOND) == 0) {
         listIssues.push_back(tr("No diamond on map"));
+    } else {
+        qDebug("diamonds found");
     }
     if (listIssues.count() > 0) {
         QString msg = tr("Map %1 is incomplete:\n%2").arg(m_game->level() + 1).arg(listIssues.join("\n"));
         QMessageBox::warning(this, "", msg, QMessageBox::Button::Ok);
         exitGame();
     }
+    qDebug("completed sanity test");
 }
 
 void CDlgTest::setZoom(bool zoom)
@@ -115,6 +123,12 @@ void CDlgTest::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
         m_joyState[AIM_RIGHT] = KEY_PRESSED;
         break;
+    case Qt::Key_Z:
+        m_joyState[Z_KEY]  = KEY_PRESSED;
+        break;
+    case Qt::Key_Space:
+        m_joyState[BUTTON]  = KEY_PRESSED;
+        break;
     case Qt::Key_Escape:
         exitGame();
     }
@@ -134,6 +148,13 @@ void CDlgTest::keyReleaseEvent(QKeyEvent *event)
         break;
     case Qt::Key_Right:
         m_joyState[AIM_RIGHT] = KEY_RELEASED;
+        break;
+    case Qt::Key_Z:
+        m_joyState[Z_KEY]  = KEY_RELEASED;
+        break;
+    case Qt::Key_Space:
+        m_joyState[BUTTON]  = KEY_RELEASED;
+        break;
     }
 }
 

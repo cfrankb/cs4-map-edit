@@ -424,6 +424,7 @@ void MainWindow::onLeftClick(int x, int y)
         if (newTileId != tile)
         {
             m_doc.map()->at(x, y) = newTileId;
+            m_doc.map()->setAttr(x,y, 0);
             m_doc.setDirty(true);
         }
     }
@@ -647,6 +648,9 @@ void MainWindow::on_actionEdit_Goto_Map_triggered()
 
 void MainWindow::on_actionEdit_Test_Map_triggered()
 {
+  //  warningMessage(tr("Not implemented"));
+    //return;
+
     if (m_doc.size())
     {
         CMap *map = m_doc.map();

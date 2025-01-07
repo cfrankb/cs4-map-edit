@@ -18,9 +18,11 @@
 #include "game.h"
 #include <cstring>
 #include "tilesdata.h"
+#include <QDebug>
 
 CGame *g_gamePrivate = nullptr;
 #define _same(_t, _v) static_cast<decltype(_t)>(_v)
+#define printf qDebug
 
 namespace Jump
 {
@@ -88,19 +90,25 @@ bool CGame::loadLevel(bool restart)
     printf("loading level: %d ...\n", m_level + 1);
     setMode(restart ? MODE_RESTART : MODE_INTRO);
 
-    const auto levelCount = m_mapIndex.size();
-    const int offset = m_mapIndex[m_level % levelCount];
-    FILE *sfile = fopen(m_mapArch.c_str(), "rb");
-    if (sfile)
-    {
-        fseek(sfile, offset, SEEK_SET);
-        m_map.read(sfile);
-        fclose(sfile);
-    }
-    else
-    {
-        printf("couldn't open %s\n", m_mapArch.c_str());
-        return false;
+    const auto levelCount =  m_mapArchLocal ? m_mapArchLocal->size() :  m_mapIndex.size();
+    if (m_mapArchLocal == nullptr) {
+        // load level from disk
+        const int offset = m_mapIndex[m_level % levelCount];
+        FILE *sfile = fopen(m_mapArch.c_str(), "rb");
+        if (sfile)
+        {
+            fseek(sfile, offset, SEEK_SET);
+            m_map.read(sfile);
+            fclose(sfile);
+        }
+        else
+        {
+            printf("couldn't open %s\n", m_mapArch.c_str());
+            return false;
+        }
+    } else {
+        // level already in memory
+        m_map = *m_mapArchLocal->at(m_level % levelCount);
     }
 
     m_hp = DEFAULT_HP;
@@ -244,8 +252,11 @@ int CGame::mode()
 
 void CGame::nextLevel()
 {
+    printf("current Level: %d", m_level+1);
     addPoints(LEVEL_BONUS + m_hp);
-    if (m_level != m_mapIndex.size() - 1)
+
+    const auto levelCount =  m_mapArchLocal ? m_mapArchLocal->size() - 1 : m_mapIndex.size() - 1;
+    if (m_level != levelCount)
     {
         ++m_level;
     }
@@ -253,6 +264,7 @@ void CGame::nextLevel()
     {
         m_level = 0;
     }
+    printf("NextLevel: %d", m_level+1);
 }
 
 void CGame::restartGame()
@@ -270,6 +282,11 @@ bool CGame::setMapArch(const std::string &maparch)
 {
     m_mapArch = maparch;
     return CMapArch::indexFromFile(m_mapArch.c_str(), m_mapIndex);
+}
+
+void CGame::setMapArch(CMapArch *maparch)
+{
+    m_mapArchLocal = maparch;
 }
 
 bool CGame::move(const int aim)
@@ -384,7 +401,6 @@ void CGame::manageActionKeys(const uint8_t *joystate)
             ++m_ropes;
             takeRope(CActor::Right);
             break;
-
         case TILES_LEFT_PULLEY:
             // no rope
             if (m_ropes)
