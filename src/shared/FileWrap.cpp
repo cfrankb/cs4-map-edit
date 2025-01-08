@@ -19,7 +19,7 @@
 #include "FileWrap.h"
 #include <cstring>
 #include <cstdio>
-#ifdef USE_QFILE
+#if defined(QT_CORE_LIB)
 #include <QFile>
 #endif
 

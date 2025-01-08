@@ -17,7 +17,7 @@
 */
 #pragma once
 
-#ifdef USE_QFILE
+#if defined(QT_VERSION)
 #include <QTimer>
 #endif
 #include <cstdint>
@@ -41,7 +41,7 @@ public:
     inline bool within(int val, int min, int max);
     void enableHiScore();
 
-#ifdef USE_QFILE
+#if defined(QT_VERSION)
 protected slots:
 #endif
     virtual void mainLoop();

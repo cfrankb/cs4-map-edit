@@ -18,11 +18,14 @@
 #include "game.h"
 #include <cstring>
 #include "tilesdata.h"
+
+#if defined(QT_CORE_LIB)
 #include <QDebug>
+#define printf qDebug
+#endif
 
 CGame *g_gamePrivate = nullptr;
 #define _same(_t, _v) static_cast<decltype(_t)>(_v)
-#define printf qDebug
 
 namespace Jump
 {
@@ -90,8 +93,9 @@ bool CGame::loadLevel(bool restart)
     printf("loading level: %d ...\n", m_level + 1);
     setMode(restart ? MODE_RESTART : MODE_INTRO);
 
-    const auto levelCount =  m_mapArchLocal ? m_mapArchLocal->size() :  m_mapIndex.size();
-    if (m_mapArchLocal == nullptr) {
+    const auto levelCount = m_mapArchLocal ? m_mapArchLocal->size() : m_mapIndex.size();
+    if (m_mapArchLocal == nullptr)
+    {
         // load level from disk
         const int offset = m_mapIndex[m_level % levelCount];
         FILE *sfile = fopen(m_mapArch.c_str(), "rb");
@@ -106,7 +110,9 @@ bool CGame::loadLevel(bool restart)
             printf("couldn't open %s\n", m_mapArch.c_str());
             return false;
         }
-    } else {
+    }
+    else
+    {
         // level already in memory
         m_map = *m_mapArchLocal->at(m_level % levelCount);
     }
@@ -252,10 +258,10 @@ int CGame::mode()
 
 void CGame::nextLevel()
 {
-    printf("current Level: %d", m_level+1);
+    printf("current Level: %d\n", m_level + 1);
     addPoints(LEVEL_BONUS + m_hp);
 
-    const auto levelCount =  m_mapArchLocal ? m_mapArchLocal->size() - 1 : m_mapIndex.size() - 1;
+    const auto levelCount = m_mapArchLocal ? m_mapArchLocal->size() - 1 : m_mapIndex.size() - 1;
     if (m_level != levelCount)
     {
         ++m_level;
@@ -264,7 +270,7 @@ void CGame::nextLevel()
     {
         m_level = 0;
     }
-    printf("NextLevel: %d", m_level+1);
+    printf("NextLevel: %d\n", m_level + 1);
 }
 
 void CGame::restartGame()
@@ -433,7 +439,7 @@ void CGame::takeRope(const uint8_t aim)
     const auto y = m_player.y();
     for (uint8_t row = 0;; ++row)
     {
-        uint expectedTile;
+        uint8_t expectedTile;
         if (row == 0)
         {
             expectedTile = (aim == CActor::Left ? TILES_LEFT_ROPE_PULLEY : TILES_RIGHT_PULLEY_ROPE);

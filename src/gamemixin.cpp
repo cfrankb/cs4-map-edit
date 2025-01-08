@@ -60,10 +60,14 @@ CGameMixin::~CGameMixin()
         delete m_animator;
     }
 
+#ifndef QT_CORE_LIB
+    // sigleton shouldn't be deleted in multiuse
+    // environmnent
     if (m_game)
     {
         delete m_game;
     }
+#endif
 
     if (m_tiles)
     {

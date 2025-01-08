@@ -22,7 +22,7 @@
 #include <string>
 #include <list>
 #include <zlib.h>
-#ifdef USE_QFILE
+#if defined(QT_CORE_LIB)
     #define FILEWRAP QFileWrap
     #include "../shared/qtgui/qfilewrap.h"
 #else
