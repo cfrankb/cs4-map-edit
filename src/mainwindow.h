@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include "mapfile.h"
@@ -28,6 +27,7 @@ private slots:
     void loadFile(const QString & filename);
     void setStatus(const QString str);
     void showAttrDialog();
+    void showRawAttrDialog();
     void on_actionFile_New_File_triggered();
     void on_actionFile_Open_triggered();
     void on_actionFile_Save_triggered();
@@ -98,4 +98,3 @@ private:
     uint8_t m_currTile = 0;
     QAction *m_recentFileActs[MAX_RECENT_FILES];
 };
-#endif // MAINWINDOW_H

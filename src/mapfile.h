@@ -1,5 +1,4 @@
-#ifndef CMAPFILE_H
-#define CMAPFILE_H
+#pragma once
 
 #include <QString>
 #include "maparch.h"
@@ -31,5 +30,3 @@ protected:
     bool m_dirty;
     QString m_filename;
 };
-
-#endif // CMAPFILE_H

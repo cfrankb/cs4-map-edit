@@ -9,9 +9,11 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QScrollBar>
+#include <QInputDialog>
 #include "mapscroll.h"
 #include "mapwidget.h"
 #include "dlgattr.h"
+#include "dlgrawattr.h"
 #include "dlgresize.h"
 #include "dlgselect.h"
 #include "dlgtest.h"
@@ -19,7 +21,6 @@
 #include "tilesdata.h"
 #include "dlgstat.h"
 #include "map.h"
-#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -360,9 +361,9 @@ void MainWindow::showContextMenu(const QPoint &pos)
     if (x >= 0 && y >= 0 && x + mx < map.len() && y + my < map.hei())
     {
         QMenu menu(this);
-        QAction *actionSetAttr = new QAction(tr("set attribute"), &menu);
+        QAction *actionSetAttr = new QAction(tr("set raw attribute"), &menu);
         connect(actionSetAttr, SIGNAL(triggered()),
-                this, SLOT(showAttrDialog()));
+                this, SLOT(showRawAttrDialog()));
         menu.addAction(actionSetAttr);
         QAction *actionStatAttr = new QAction(tr("see tile stats"), &menu);
         connect(actionStatAttr, SIGNAL(triggered()),
@@ -377,13 +378,26 @@ void MainWindow::showContextMenu(const QPoint &pos)
 void MainWindow::showAttrDialog()
 {
     CMap &map = *m_doc.map();
-    uint8_t a = map.getAttr(m_hx, m_hy);
+    const uint8_t a = map.getAttr(m_hx, m_hy);
     CDlgAttr dlg(this);
     dlg.attr(a);
     if (dlg.exec() == QDialog::Accepted)
     {
-        a = dlg.attr();
-        map.setAttr(m_hx, m_hy, a);
+        map.setAttr(m_hx, m_hy, dlg.attr());
+        m_doc.setDirty(true);
+    }
+}
+
+void MainWindow::showRawAttrDialog()
+{
+    CMap &map = *m_doc.map();
+    const uint8_t a = map.getAttr(m_hx, m_hy);
+    CDlgRawAttr dlg(this);
+    dlg.setWindowTitle(tr("Set Raw Tile Attribute"));
+    dlg.attr(a);
+    if (dlg.exec() == QDialog::Accepted)
+    {
+        map.setAttr(m_hx, m_hy, dlg.attr());
         m_doc.setDirty(true);
     }
 }
@@ -648,9 +662,6 @@ void MainWindow::on_actionEdit_Goto_Map_triggered()
 
 void MainWindow::on_actionEdit_Test_Map_triggered()
 {
-  //  warningMessage(tr("Not implemented"));
-    //return;
-
     if (m_doc.size())
     {
         CMap *map = m_doc.map();

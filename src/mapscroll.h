@@ -1,6 +1,4 @@
-#ifndef CMAPSCROLL_H
-#define CMAPSCROLL_H
-
+#pragma once
 #include <QAbstractScrollArea>
 class QWidget;
 class CMap;
@@ -47,5 +45,3 @@ protected:
         STEPS = 4
     };
 };
-
-#endif // CMAPSCROLL_H

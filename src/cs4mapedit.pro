@@ -15,6 +15,7 @@ SOURCES += \
     actor.cpp \
     animator.cpp \
     dlgattr.cpp \
+    dlgrawattr.cpp \
     dlgresize.cpp \
     dlgabout.cpp \
     dlgselect.cpp \
@@ -22,7 +23,6 @@ SOURCES += \
     dlgtest.cpp \
     game.cpp \
     gamemixin.cpp \
-   # level.cpp \
     main.cpp \
     mainwindow.cpp \
     maparch.cpp \
@@ -43,11 +43,10 @@ SOURCES += \
 
 HEADERS += \
     actor.h \
-    anniedata.h \
-    #animzdata.h \
     animator.h \
     app_version.h \
     dlgattr.h \
+    dlgrawattr.h \
     dlgresize.h \
     dlgabout.h \
     dlgselect.h \
@@ -55,7 +54,6 @@ HEADERS += \
     dlgtest.h \
     game.h \
     gamemixin.h \
-   # level.h \
     mainwindow.h \
     maparch.h \
     mapfile.h \
@@ -71,13 +69,12 @@ HEADERS += \
     shared/qtgui/cheat.h \
     shared/qtgui/qfilewrap.h \
     shared/qtgui/qthelper.h \
-    #sprtypes.h \
     tilebox.h \
-    tilesdata.h \
-    sounds.h
+    tilesdata.h
 
 FORMS += \
     dlgattr.ui \
+    dlgrawattr.ui \
     dlgresize.ui \
     dlgabout.ui \
     dlgselect.ui \

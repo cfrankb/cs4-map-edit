@@ -1,14 +1,13 @@
-#ifndef DLGSELECT_H
-#define DLGSELECT_H
-
+#pragma once
 #include <QDialog>
 
 class CFrameSet;
 class CMap;
 class CMapFile;
 
-namespace Ui {
-class CDlgSelect;
+namespace Ui
+{
+    class CDlgSelect;
 }
 
 class CDlgSelect : public QDialog
@@ -25,15 +24,14 @@ private slots:
     void on_cbSelect_Maps_currentIndexChanged(int index);
 
 private:
-    enum {
+    enum
+    {
         BLACK = 0xff000000,
         ALPHA = 0xff000000
     };
     void updatePreview(CMap *map);
-    CFrameSet* preloadTiles();
+    CFrameSet *preloadTiles();
     Ui::CDlgSelect *ui;
     CFrameSet *m_frameSet;
     CMapFile *m_mapFile;
 };
-
-#endif // DLGSELECT_H

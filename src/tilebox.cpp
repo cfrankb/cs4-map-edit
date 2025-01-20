@@ -9,7 +9,6 @@
 #include "shared/FrameSet.h"
 #include "shared/Frame.h"
 #include "tilesdata.h"
-//#include "sprtypes.h"
 
 CTileBox::CTileBox(QWidget *parent) :
     QToolBox(parent)

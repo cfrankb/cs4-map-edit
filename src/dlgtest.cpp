@@ -56,7 +56,6 @@ void CDlgTest::sanityTest()
     const auto level = m_game->level();
     qDebug("starting sanity test for level: %d", level);
     CMap *map = m_maparch->at(level);
-    qDebug("map is null? %d", map == nullptr);
     const Pos pos = map->findFirst(TILES_PLAYER);
     QStringList listIssues;
     if ((pos.x == CMap::NOT_FOUND ) && (pos.y == CMap::NOT_FOUND )) {
@@ -197,16 +196,4 @@ void CDlgTest::preloadAssets()
     } else {
         qDebug("failed to open %s", fontName);
     }
-
-#ifdef USE_SDL_MIXER
-    const char soundArch [] = ":/data/sounds.dat";
-    if (file.open(soundArch)){
-        if (!m_game->readSndArch(file)) {
-            qDebug("failed loading sounds");
-        }
-        file.close();
-    } else {
-        qDebug("can't open %s", soundArch);
-    }
-#endif
 }

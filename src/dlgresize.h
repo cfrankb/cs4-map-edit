@@ -1,10 +1,10 @@
-#ifndef DLGRESIZE_H
-#define DLGRESIZE_H
+#pragma once
 
 #include <QDialog>
 
-namespace Ui {
-class CDlgResize;
+namespace Ui
+{
+    class CDlgResize;
 }
 
 class CDlgResize : public QDialog
@@ -25,7 +25,8 @@ private slots:
 
 private:
     void validateFields();
-    enum {
+    enum
+    {
         MIN_SIZE = 8,
         MAX_SIZE = 256
     };
@@ -33,5 +34,3 @@ private:
 private:
     Ui::CDlgResize *ui;
 };
-
-#endif // DLGRESIZE_H

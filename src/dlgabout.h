@@ -1,10 +1,9 @@
-#ifndef DLGABOUT_H
-#define DLGABOUT_H
-
+#pragma once
 #include <QtWidgets/QDialog>
 
-namespace Ui {
-class DlgAbout;
+namespace Ui
+{
+    class DlgAbout;
 }
 
 class DlgAbout : public QDialog
@@ -18,5 +17,3 @@ public:
 private:
     Ui::DlgAbout *ui;
 };
-
-#endif // DLGABOUT_H

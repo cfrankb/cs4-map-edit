@@ -1,5 +1,4 @@
-#ifndef TILELBOX_H
-#define TILELBOX_H
+#pragma once
 
 #include <QToolBox>
 
@@ -44,5 +43,3 @@ private:
         HIGHLIGHT_BLUE = 0xf5,
     };
 };
-
-#endif // TILELBOX_H
